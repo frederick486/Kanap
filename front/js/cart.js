@@ -1,26 +1,16 @@
-// récupération depuis le localStorage /!\
-var items = []
 
-items = JSON.parse(localStorage.getItem("basket"))
-// items = localStorage.getItem("basket")
+let items = JSON.parse(localStorage.getItem("basket"))
 
-console.log(items)
-
-let id = items[0]
-let qty = items[1]
-let color = items[2]
-
-console.log("id = ", id)
-console.log("quantité = ", qty)
-console.log("couleur = ", color)
-
-let article
+let id = items[0][0]
+let color = items[0][1]
+let qty = items[0][2]
 
 ///////////////////////////////////////////////////////////
 
+let article
+
+
 (async function() {
-    // const articleId = getArticleId()
-    // console.log(articleId)
     const article = await getArticle(id)
     console.log(article)
     displayArticle(article)
@@ -71,7 +61,3 @@ function displayArticle(article) {
     
     `    
 }
-
-
-
-

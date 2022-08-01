@@ -43,10 +43,11 @@ function displayArticle(article) {
 
 
 ////////////////////////////////////////////////////////////
-// Envoi dans le localStorage
+// Récupération de la quantité et de la couleur en cours 
 ////////////////////////////////////////////////////////////
 
 const toCardBtn = document.getElementById("addToCart")
+
 
 function qtyValue() {
     let qty = document.getElementById("quantity")
@@ -59,84 +60,23 @@ function colorValue() {
     return color.value
 }
 
+////////////////////////////////////////////////////////////
+// Envoi dans le localStorage   
+////////////////////////////////////////////////////////////
 
 // au clic du bouton avec id=click
 toCardBtn.addEventListener("click", () => {
-    // Envoi de l'id, quantité et couleur dans le localStorage 
-    // Version 1 --------------------------------------------------------
-    // const articleId = getArticleId()
-    // localStorage.setItem("id", articleId)
-    // const qty = qtyValue()
-    // localStorage.setItem("Quantity", qty)
-    // const color = colorValue()
-    // localStorage.setItem("Color", color)
-    // Version 2 ---------------------------------------------------------
-    // var basket = {"id": articleId, "Quantity": qty, "Color":color}
 
-    // Envoi id, quantité et couleur dans un tableau 
-    var items = [getArticleId(), qtyValue(), colorValue()]
-    // Essais antérieurs (ne fonctionnent pas) ----------------------------
-    // var items = {"id": getArticleId(), "Quantity": qtyValue(), "Color":colorValue()}
-    // var items = [{"id": getArticleId()}, {"Quantity": qtyValue()}, {"Color":colorValue()}]
+    let newArticle = [getArticleId(), colorValue(), qtyValue()]
 
-    // Transformation du tableau en chaine de caractère et envoi dans le localstorage
-    localStorage.setItem("basket", JSON.stringify(items))
-    // localStorage.setItem("basket", items)
+    let basket = JSON.parse(localStorage.getItem("basket"))
 
+    if(basket) {
+        basket.push(newArticle)
+        localStorage.setItem("basket", JSON.stringify(basket))
+    }else {
+        basket = []
+        basket.push(newArticle)
+        localStorage.setItem("basket", JSON.stringify(basket))
+    }
 })
-
-
-// // envoie dans le localStorage
-// function saveBasket(basket) {
-//     localStorage.setItem("basket", JSON.stringify(basket))
-// }
-
-
-// function addBasket(product) {
-//     let basket = getBasket()
-//     let foundProduct = basket.find(p => p.id == product.id)
-//     if(foundProduct != undefined){
-//         foundProduct.quantity++
-//     } else{
-//         product.quantity = 1
-//         basket.push(product)
-//     }
-//     saveBasket(basket)
-// }
-
-// function removeFromBasket(product) {
-//     let basket = getBasket()
-//     basket = basket.filter(p => p.id != product.id)
-//     saveBasket(basket)
-// }
-
-// function changeQuantity(product, quantity) {
-//     let basket = getBasket()
-//     let foundProduct = basket.find(p => p.id == product.id)
-//     if(foundProduct != undefined){
-//         foundProduct.quantity += quantity
-//         if(foundProduct.quantity <= 0){
-//             removeFromBasket(foundProduct)
-//         } else {
-//             saveBasket(basket)
-//         }
-//     } 
-// }
-
-// function getNumberProduct() {
-//     let basket = getBasket()
-//     let number = 0
-//     for (let product of basket) {
-//         number += product.quantity        
-//     }
-//     return number
-// }
-
-// function getTotalPrice(){
-//     let basket = getBasket()
-//     let total = 0
-//     for (let product of basket) {
-//         total += product.quantity * product.price        
-//     }
-//     return total
-// }

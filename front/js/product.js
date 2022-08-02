@@ -2,9 +2,9 @@
 
 (async function() {
     const articleId = getArticleId()
-    console.log(articleId)
+    // console.log(articleId)
     const article = await getArticle(articleId)
-    console.log(article)
+    // console.log(article)
     displayArticle(article)
 })()
 
@@ -65,18 +65,46 @@ function colorValue() {
 ////////////////////////////////////////////////////////////
 
 // au clic du bouton avec id=click
+// toCardBtn.addEventListener("click", () => {
+
+//     let newArticle = [getArticleId(), colorValue(), qtyValue()]
+
+//     let basket = JSON.parse(localStorage.getItem("basket"))
+
+//     if(basket) {
+//         basket.push(newArticle)
+//         localStorage.setItem("basket", JSON.stringify(basket))
+//     }else {
+//         basket = []
+//         basket.push(newArticle)
+//         localStorage.setItem("basket", JSON.stringify(basket))
+//     }
+// })
+
+// au clic du bouton avec id=click
 toCardBtn.addEventListener("click", () => {
 
     let newArticle = [getArticleId(), colorValue(), qtyValue()]
 
     let basket = JSON.parse(localStorage.getItem("basket"))
 
-    if(basket) {
-        basket.push(newArticle)
-        localStorage.setItem("basket", JSON.stringify(basket))
-    }else {
+    let articleExistant = false
+
+    if(basket == null) {
         basket = []
         basket.push(newArticle)
         localStorage.setItem("basket", JSON.stringify(basket))
+    } else {
+        for (let i = 0; i < basket.length; i++) {
+            if(basket[i][0] == getArticleId() && basket[i][1] == colorValue() ) {
+                basket[i][2] = qtyValue()
+                localStorage.setItem("basket", JSON.stringify(basket))
+                articleExistant = true
+            }            
+    }
+    if (articleExistant == false) {
+        basket.push(newArticle)
+        localStorage.setItem("basket", JSON.stringify(basket))
+    }
     }
 })

@@ -1,6 +1,7 @@
 
 let basket = JSON.parse(localStorage.getItem("basket"))
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 for (let i = 0; i < basket.length; i++) {
      
@@ -8,7 +9,7 @@ for (let i = 0; i < basket.length; i++) {
     let color = basket[i][1]
     let qty = basket[i][2]
 
-/////////////////////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------------------------------------------
 
     // ???????? article est déclaré mais sa valeur n'est jamais lue, 
     // pourtant quand on la supprime, l'affichage ne fonctionne plus ...
@@ -36,7 +37,8 @@ for (let i = 0; i < basket.length; i++) {
             })
     }
 
-/////////////////////////////////////////////////////////////////////////////////////
+
+//---------------------------------------------------------------------------------------------------------------
 
     //AFFICHAGE
     function displayArticle(article) {
@@ -64,6 +66,50 @@ for (let i = 0; i < basket.length; i++) {
             </div>
         </article> 
         
-        `    
+        `
+        // SUPPRESSION D'UN ARTICLE ------------------------------------------------------      
+        if(i == basket.length - 1) {
+            // ATTENTION AU . DEVANT deleteItem
+            let articleDelleted = document.querySelectorAll('.deleteItem')
+            console.log(articleDelleted)
+
+            for (let l = 0; l < articleDelleted.length; l++) {
+                articleDelleted[l].addEventListener("click", (event) => {
+                    event.preventDefault();
+                    console.log(articleDelleted[l]);
+                    // articleDelleted.splice(l,1); // => Uncaught TypeError: articleDelleted.splice is not a function
+                    
+                    // articleDelleted = articleDelleted.filter(p => articleDelleted[l] != articleDelleted)
+                    basket.splice(l, 1);
+                    localStorage.setItem("basket", JSON.stringify(basket));
+                });  
+             }      
+           
+        }
+        // ------------------------------------------------------------------------------      
+
     }
+
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //---------------------------------------------------------------------------------------
+
+    // function delletArticle() {        
+    //     let articleDelleted = document.querySelectorAll('deleteItem')
+    //     // console.log(articleDelleted)
+    //     return articleDelleted
+    // }    
+    
+    // console.log(delletArticle())
+
+    // articleDelleted[1].addEventListener("click", () => {
+    //     console.log("click !")
+        // basket.splice(i,1)
+        // localStorage.setItem("basket", JSON.stringify(basket))            
+    // })
+    //---------------------------------------------------------------------------------------
+
+    //     articleDelleted = document.getElementsByClassName("deleteItem") 
+    //     articleDelleted = document.querySelectorAll('deleteItem')

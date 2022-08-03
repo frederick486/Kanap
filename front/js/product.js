@@ -1,5 +1,5 @@
 
-
+// pour avoir l'id de la page courante
 (async function() {
     const articleId = getArticleId()
     // console.log(articleId)

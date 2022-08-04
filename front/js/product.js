@@ -100,11 +100,12 @@ toCardBtn.addEventListener("click", () => {
                 basket[i][2] = qtyValue()
                 localStorage.setItem("basket", JSON.stringify(basket))
                 articleExistant = true
+                break
             }            
-    }
-    if (articleExistant == false) {
-        basket.push(newArticle)
-        localStorage.setItem("basket", JSON.stringify(basket))
-    }
+        }   
+        if (articleExistant == false) {
+            basket.push(newArticle)
+            localStorage.setItem("basket", JSON.stringify(basket))
+        }
     }
 })

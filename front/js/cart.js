@@ -9,8 +9,6 @@ for (let i = 0; i < basket.length; i++) {
     let color = basket[i][1]
     let qty = basket[i][2]
 
-//---------------------------------------------------------------------------------------------------------------
-
     // ???????? article est déclaré mais sa valeur n'est jamais lue, 
     // pourtant quand on la supprime, l'affichage ne fonctionne plus ...
     let article
@@ -36,11 +34,9 @@ for (let i = 0; i < basket.length; i++) {
                 alert(error)
             })
     }
+    //fin Récupération des infots de l'article depuis l'API
 
-
-//---------------------------------------------------------------------------------------------------------------
-
-    //AFFICHAGE
+    // affichage ---------------------------------------------------------------------
     function displayArticle(article) {
         document.getElementById("cart__items").innerHTML += `
 
@@ -52,7 +48,7 @@ for (let i = 0; i < basket.length; i++) {
             <div class="cart__item__content__description">
                 <h2>${article.name}</h2>
                 <p>${color}</p>
-                <p>${article.price} €</p>
+                <p>${article.price * qty} €</p>
             </div>
             <div class="cart__item__content__settings">
                 <div class="cart__item__content__settings__quantity">
@@ -67,9 +63,10 @@ for (let i = 0; i < basket.length; i++) {
         </article> 
         
         `
-        // SUPPRESSION D'UN ARTICLE ------------------------------------------------------      
+        // SUPPRESSION ET MODIFICATION QUANTITE D'UN ARTICLE ------------------------------------------------------  
         if(i == basket.length - 1) {
-            // ATTENTION AU . DEVANT deleteItem
+            // suppression -----------------------------------------------------------------------------------------    
+            // (ATTENTION AU . DEVANT deleteItem)
             let articleDelleted = document.querySelectorAll('.deleteItem')
             console.log(articleDelleted)
 
@@ -77,39 +74,39 @@ for (let i = 0; i < basket.length; i++) {
                 articleDelleted[l].addEventListener("click", (event) => {
                     event.preventDefault();
                     console.log(articleDelleted[l]);
-                    // articleDelleted.splice(l,1); // => Uncaught TypeError: articleDelleted.splice is not a function
-                    
+                    // articleDelleted.splice(l,1); // => Uncaught TypeError: articleDelleted.splice is not a function                    
                     // articleDelleted = articleDelleted.filter(p => articleDelleted[l] != articleDelleted)
                     basket.splice(l, 1);
                     localStorage.setItem("basket", JSON.stringify(basket));
                 });  
-             }      
+            }   
+            // fin suppression ---------------------------------------------------------------------------------------    
+
+            // modif quantité ----------------------------------------------------------------------------------------    
+            let modifQty = document.getElementsByName('itemQuantity')
+            console.log(modifQty)
            
+            for (let l = 0; l < modifQty.length; l++) {
+
+                // console.log(modifQty[l].innerHTML);
+
+                modifQty[l].addEventListener("input", (event) => {
+                    event.preventDefault();
+                    var qtyArt = event.target.value;
+                    console.log(modifQty[l].innerHTML);
+
+                    basket[l][2] = qtyArt;
+                    localStorage.setItem("basket", JSON.stringify(basket));
+                })
+
+            }
+            // fin modif quantité -------------------------------------------------------------------------------------   
+
         }
-        // ------------------------------------------------------------------------------      
+        // FIN SUPPRESSION ET MODIFICATION QUANTITE D'UN ARTICLE ------------------------------------------------------  
 
     }
+    // fin affichage ---------------------------------------------------------------------
 
 }
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    //---------------------------------------------------------------------------------------
-
-    // function delletArticle() {        
-    //     let articleDelleted = document.querySelectorAll('deleteItem')
-    //     // console.log(articleDelleted)
-    //     return articleDelleted
-    // }    
-    
-    // console.log(delletArticle())
-
-    // articleDelleted[1].addEventListener("click", () => {
-    //     console.log("click !")
-        // basket.splice(i,1)
-        // localStorage.setItem("basket", JSON.stringify(basket))            
-    // })
-    //---------------------------------------------------------------------------------------
-
-    //     articleDelleted = document.getElementsByClassName("deleteItem") 
-    //     articleDelleted = document.querySelectorAll('deleteItem')
+// FIN DE BOUCLE FOR ///////////////////////////////////////////////////////////////////////////////////////////////////

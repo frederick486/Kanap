@@ -1,6 +1,8 @@
 
 let basket = JSON.parse(localStorage.getItem("basket"))
 
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 for (let i = 0; i < basket.length; i++) {
@@ -110,3 +112,69 @@ for (let i = 0; i < basket.length; i++) {
 
 }
 // FIN DE BOUCLE FOR ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// FORMULAIRE//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// récupération de l'élément <input [...] id="order">
+const order = document.getElementById("order");
+
+const tabId = []
+
+for (let i = 0; i < basket.length; i++) {
+    tabId[i] = basket[i][0];    
+}
+
+console.log(tabId);
+
+// au click sur le bouton <input [...] id="order">
+order.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    let bodyEnvoie = {
+        contact: {
+            firstName: document.getElementById("firstName").value,
+            lastName: document.getElementById("lastName").value,
+            address: document.getElementById("address").value,
+            city: document.getElementById("city").value,
+            email: document.getElementById("email").value
+        },
+        products: tabId
+        // products: ["107fb5b75607497b96722bda5b504926"] // pour essais
+    }
+
+  
+    // Envoi vers l'API -----------------------------------------------------------------
+
+    fetch('http://localhost:3000/api/products/order', {
+        method: "POST",
+        body: JSON.stringify(bodyEnvoie),
+        headers: {
+            'Content-Type': 'application/json'
+        }        
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        const orderId = data.orderId
+        window.location.href = "../html/confirmation.html" + "?orderId=" + orderId
+    })
+    .catch((err) => console.log(err))
+
+    // ---------------------------------------------------------------------------
+
+})
+
+
+/**
+ *
+ * Expects request to contain:
+ * contact: {
+ *   firstName: string,
+ *   lastName: string,
+ *   address: string,
+ *   city: string,
+ *   email: string
+ * }
+ * products: [string] <-- array of product _id
+ *
+ */

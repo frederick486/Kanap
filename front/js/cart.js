@@ -116,6 +116,93 @@ for (let i = 0; i < basket.length; i++) {
 
 // FORMULAIRE//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// console.log(this.value);
+// console.log(regexName.test(this.value));
+//console.log( );
+
+const regexName = /\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+/i;
+const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const regexAddresse = /^[a-zA-Z0-9\s\,\''\-]*$/;
+
+let testFirstName = testLastName = testAdress = testCity = testEmail = false;
+
+// test prénom
+document.getElementById("firstName").addEventListener("change", function() {
+
+    let messageError = document.getElementById("firstNameErrorMsg");
+
+    if(!regexName.test(this.value)) {
+        messageError.innerHTML = "VEUILLEZ REMPLIR CORRECTEMENT CE CHAMP";
+        return false;
+    }else {
+        messageError.innerHTML = null;
+        testFirstName = true;
+        return true;
+    }
+
+})
+
+document.getElementById("lastName").addEventListener("change", function() {
+
+    let messageError = document.getElementById("lastNameErrorMsg");
+
+    if(!regexName.test(this.value)) {
+        messageError.innerHTML = "VEUILLEZ REMPLIR CORRECTEMENT CE CHAMP";
+        return false;
+    }else {
+        messageError.innerHTML = null;
+        testLastName = true;
+        return true;
+    }
+
+})
+
+document.getElementById("address").addEventListener("change", function() {
+
+    let messageError = document.getElementById("addressErrorMsg");
+
+    if(!regexAddresse.test(this.value)) {
+        messageError.innerHTML = "VEUILLEZ REMPLIR CORRECTEMENT CE CHAMP";
+        return false;
+    }else {
+        messageError.innerHTML = null;
+        testAdress = true;
+        return true;
+    }
+
+})
+
+document.getElementById("city").addEventListener("change", function() {
+
+    let messageError = document.getElementById("cityErrorMsg");
+
+    if(!regexAddresse.test(this.value)) {
+        messageError.innerHTML = "VEUILLEZ REMPLIR CORRECTEMENT CE CHAMP";
+        return false;
+    }else {
+        messageError.innerHTML = null;
+        testCity = true;
+        return true;
+    }
+
+})
+
+document.getElementById("email").addEventListener("change", function() {
+
+    let messageError = document.getElementById("emailErrorMsg");
+
+    if(!regexEmail.test(this.value)) {
+        messageError.innerHTML = "VEUILLEZ REMPLIR CORRECTEMENT CE CHAMP";
+        return false;
+    }else {
+        messageError.innerHTML = null;
+        testEmail = true;
+        return true;
+    }
+
+})
+
+
 // récupération de l'élément <input [...] id="order">
 const order = document.getElementById("order");
 
@@ -143,7 +230,9 @@ order.addEventListener("click", (e) => {
         // products: ["107fb5b75607497b96722bda5b504926"] // pour essais
     }
 
-  
+
+
+    if(testFirstName && testLastName && testAdress && testCity && testEmail) {
     // Envoi vers l'API -----------------------------------------------------------------
 
     fetch('http://localhost:3000/api/products/order', {
@@ -161,6 +250,9 @@ order.addEventListener("click", (e) => {
     .catch((err) => console.log(err))
 
     // ---------------------------------------------------------------------------
+    }else {
+        alert('FORMULAIRE MAL RENSEIGNE')
+    }
 
 })
 

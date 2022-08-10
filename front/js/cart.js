@@ -1,7 +1,7 @@
 
 let basket = JSON.parse(localStorage.getItem("basket"))
 
-
+let totalPrice = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -18,25 +18,21 @@ for (let i = 0; i < basket.length; i++) {
 
     (async function() {
         const article = await getArticle(id)
-        // console.log(article)
+        console.log(article)
         displayArticle(article)
     })()
 
-
     //Récupération des infots de l'article depuis l'API
-    function getArticle() {
-        return fetch(`http://localhost:3000/api/products/${id}`)      
-            .then(function(httpBodyResponse) {                  
-                return httpBodyResponse.json()                 
-            })        
-            .then(function(article) {                     
-                return article                     
-            })
-            .catch(function(error) {                            
-                alert(error)
-            })
-    }
-    //fin Récupération des infots de l'article depuis l'API
+    async function getArticle() {
+        try {
+            const httpBodyResponse = await fetch(`http://localhost:3000/api/products/${id}`)
+            const article = await httpBodyResponse.json()
+            return article
+        } catch (error) {
+            alert(error)
+        }
+    } //fin Récupération des infots de l'article depuis l'API
+    
 
     // affichage ---------------------------------------------------------------------
     function displayArticle(article) {
@@ -64,54 +60,67 @@ for (let i = 0; i < basket.length; i++) {
             </div>
         </article> 
         
-        `
-        // SUPPRESSION ET MODIFICATION QUANTITE D'UN ARTICLE ------------------------------------------------------  
-        if(i == basket.length - 1) {
-            // suppression -----------------------------------------------------------------------------------------    
-            // (ATTENTION AU . DEVANT deleteItem)
-            let articleDelleted = document.querySelectorAll('.deleteItem')
-            console.log(articleDelleted)
+        ` // <<< ATTENTION A L'APOSTROPHE 
 
-            for (let l = 0; l < articleDelleted.length; l++) {
-                articleDelleted[l].addEventListener("click", (event) => {
-                    event.preventDefault();
-                    console.log(articleDelleted[l]);
-                    // articleDelleted.splice(l,1); // => Uncaught TypeError: articleDelleted.splice is not a function                    
-                    // articleDelleted = articleDelleted.filter(p => articleDelleted[l] != articleDelleted)
-                    basket.splice(l, 1);
-                    localStorage.setItem("basket", JSON.stringify(basket));
-                });  
-            }   
-            // fin suppression ---------------------------------------------------------------------------------------    
+        if(i == basket.length - 1)
+        {
+            delletArticle();
 
-            // modif quantité ----------------------------------------------------------------------------------------    
-            let modifQty = document.getElementsByName('itemQuantity')
-            console.log(modifQty)
-           
-            for (let l = 0; l < modifQty.length; l++) {
-
-                // console.log(modifQty[l].innerHTML);
-
-                modifQty[l].addEventListener("input", (event) => {
-                    event.preventDefault();
-                    var qtyArt = event.target.value;
-                    console.log(modifQty[l].innerHTML);
-
-                    basket[l][2] = qtyArt;
-                    localStorage.setItem("basket", JSON.stringify(basket));
-                })
-
-            }
-            // fin modif quantité -------------------------------------------------------------------------------------   
+            modifQuantity();
 
         }
-        // FIN SUPPRESSION ET MODIFICATION QUANTITE D'UN ARTICLE ------------------------------------------------------  
 
+        totalPrice += article.price * basket[i][2];    
+        document.getElementById('totalPrice').innerHTML = totalPrice;
+
+    } // fin display()
+
+} // fin boucle for()
+
+
+totalQuantity()
+
+
+function totalQuantity() {
+    let totalQty = 0;
+    for (let i = 0; i < basket.length; i++) {
+        totalQty = +totalQty + +basket[i][2]       
     }
-    // fin affichage ---------------------------------------------------------------------
 
+    document.getElementById('totalQuantity').innerHTML = totalQty;
 }
-// FIN DE BOUCLE FOR ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+function delletArticle() {
+    let articleDelleted = document.querySelectorAll('.deleteItem') // <<< ATTENTION AU . DEVANT deleteItem
+
+    for (let l = 0; l < articleDelleted.length; l++) {
+
+        articleDelleted[l].addEventListener("click", (event) => {
+            event.preventDefault();
+            basket.splice(l, 1);
+            localStorage.setItem("basket", JSON.stringify(basket));
+        });  
+    }   
+}
+   
+
+function modifQuantity() {
+    let modifQty = document.getElementsByName('itemQuantity')
+    console.log(modifQty)
+   
+    for (let l = 0; l < modifQty.length; l++) {
+
+        modifQty[l].addEventListener("input", (event) => {
+            event.preventDefault();
+            var qtyArt = event.target.value;
+            // console.log(modifQty[l].innerHTML);
+
+            basket[l][2] = qtyArt;
+            localStorage.setItem("basket", JSON.stringify(basket));
+        })
+    } 
+}  
 
 
 // FORMULAIRE//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +135,6 @@ const regexAddresse = /^[a-zA-Z0-9\s\,\''\-]*$/;
 
 let testFirstName = testLastName = testAdress = testCity = testEmail = false;
 
-// test prénom
 document.getElementById("firstName").addEventListener("change", function() {
 
     let messageError = document.getElementById("firstNameErrorMsg");
@@ -139,8 +147,8 @@ document.getElementById("firstName").addEventListener("change", function() {
         testFirstName = true;
         return true;
     }
-
 })
+
 
 document.getElementById("lastName").addEventListener("change", function() {
 
@@ -154,8 +162,8 @@ document.getElementById("lastName").addEventListener("change", function() {
         testLastName = true;
         return true;
     }
-
 })
+
 
 document.getElementById("address").addEventListener("change", function() {
 
@@ -169,8 +177,8 @@ document.getElementById("address").addEventListener("change", function() {
         testAdress = true;
         return true;
     }
-
 })
+
 
 document.getElementById("city").addEventListener("change", function() {
 
@@ -184,8 +192,8 @@ document.getElementById("city").addEventListener("change", function() {
         testCity = true;
         return true;
     }
-
 })
+
 
 document.getElementById("email").addEventListener("change", function() {
 
@@ -199,7 +207,6 @@ document.getElementById("email").addEventListener("change", function() {
         testEmail = true;
         return true;
     }
-
 })
 
 
@@ -231,30 +238,28 @@ order.addEventListener("click", (e) => {
     }
 
 
-
     if(testFirstName && testLastName && testAdress && testCity && testEmail) {
-    // Envoi vers l'API -----------------------------------------------------------------
+    // Si tout ok => envoi vers l'API  ...
 
-    fetch('http://localhost:3000/api/products/order', {
-        method: "POST",
-        body: JSON.stringify(bodyEnvoie),
-        headers: {
-            'Content-Type': 'application/json'
-        }        
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        const orderId = data.orderId
-        window.location.href = "../html/confirmation.html" + "?orderId=" + orderId
-    })
-    .catch((err) => console.log(err))
+        fetch('http://localhost:3000/api/products/order', {
+            method: "POST",
+            body: JSON.stringify(bodyEnvoie),
+            headers: {
+                'Content-Type': 'application/json'
+            }        
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            const orderId = data.orderId
+            window.location.href = "../html/confirmation.html" + "?orderId=" + orderId
+        })
+        .catch((err) => console.log(err))
 
-    // ---------------------------------------------------------------------------
-    }else {
+    }else { // Sinon message d'erreur
         alert('FORMULAIRE MAL RENSEIGNE')
     }
 
-})
+}) // fin du order.addEventListener("click" ...)
 
 
 /**

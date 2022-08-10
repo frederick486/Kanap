@@ -54,9 +54,9 @@ function qtyValue() {
     return qty.value
 }
 
-
 function colorValue() {
     let color = document.getElementById("colors")
+    // console.log(color.value)
     return color.value
 }
 
@@ -67,28 +67,46 @@ function colorValue() {
 // au clic du bouton avec id=click
 toCardBtn.addEventListener("click", () => {
 
-    let newArticle = [getArticleId(), colorValue(), qtyValue()]
+    if((qtyValue() > 0 && qtyValue() <= 100) && (colorValue() != ""))
+    {
+        let newArticle = [getArticleId(), colorValue(), qtyValue()]
 
-    let basket = JSON.parse(localStorage.getItem("basket"))
-
-    let articleExistant = false
-
-    if(basket == null) {
-        basket = []
-        basket.push(newArticle)
-        localStorage.setItem("basket", JSON.stringify(basket))
-    } else {
-        for (let i = 0; i < basket.length; i++) {
-            if(basket[i][0] == getArticleId() && basket[i][1] == colorValue() ) {
-                basket[i][2] =  +basket[i][2] + +qtyValue()
-                localStorage.setItem("basket", JSON.stringify(basket))
-                articleExistant = true
-                break
-            }            
-        }   
-        if (articleExistant == false) {
+        let basket = JSON.parse(localStorage.getItem("basket"))
+    
+        let articleExistant = false
+    
+        if(basket == null) {
+            basket = []
             basket.push(newArticle)
             localStorage.setItem("basket", JSON.stringify(basket))
+        } else {
+            for (let i = 0; i < basket.length; i++) {
+                if(basket[i][0] == getArticleId() && basket[i][1] == colorValue() ) {
+                    basket[i][2] =  +basket[i][2] + +qtyValue()
+                    localStorage.setItem("basket", JSON.stringify(basket))
+                    articleExistant = true
+                    break
+                }            
+            }   
+            if (articleExistant == false) {
+                basket.push(newArticle)
+                localStorage.setItem("basket", JSON.stringify(basket))
+            }
         }
+
+    }else if(colorValue() == "") {
+        alert('Veuillez selectionner une couleur')
+        return false;
+    }else if(qtyValue() <= 0 || qtyValue() > 100) {
+        alert('Veillez saisir une quantité comprise entre 0 et 100');
+        return false;
     }
+    
 })
+
+// }else if(qtyValue() <= 0 || qtyValue() > 100){
+//     alert('Veillez saisir une quantité comprise entre 0 et 100');
+//     return false;
+// }else {
+//     alert('Veuillez selectionner une couleur')
+// }

@@ -107,19 +107,27 @@ function delletArticle() {
 
 function modifQuantity() {
     let modifQty = document.getElementsByName('itemQuantity')
-    console.log(modifQty)
    
     for (let l = 0; l < modifQty.length; l++) {
 
         modifQty[l].addEventListener("input", (event) => {
-            event.preventDefault();
-            var qtyArt = event.target.value;
-            // console.log(modifQty[l].innerHTML);
+        event.preventDefault();
+                
+        let qtyArt = event.target.value;
+        console.log('qtyArt =>', qtyArt)
 
-            basket[l][2] = qtyArt;
-            localStorage.setItem("basket", JSON.stringify(basket));
+            if(qtyArt <= 0 || qtyArt > 100)
+            {
+                alert('Veuillez saisir une valeur comprise entre 1 et 100')
+                    return false                    
+            }else {
+                basket[l][2] = qtyArt;
+                localStorage.setItem("basket", JSON.stringify(basket));
+            }
+
         })
     } 
+    
 }  
 
 
@@ -275,3 +283,6 @@ order.addEventListener("click", (e) => {
  * products: [string] <-- array of product _id
  *
  */
+
+
+//  console.log(' =>', )

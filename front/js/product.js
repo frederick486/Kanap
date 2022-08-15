@@ -2,9 +2,7 @@
 // pour avoir l'id de la page courante
 (async function() {
     const articleId = getArticleId()
-    // console.log(articleId)
     const article = await getArticle(articleId)
-    // console.log(article)
     displayArticle(article)
 })()
 
@@ -29,7 +27,7 @@ function getArticle(articleId) {
 }
 
 
-// affichage 
+// affichage de l'article
 function displayArticle(article) {
     document.getElementById("title").innerHTML = article.name
     document.getElementById("price").innerHTML = article.price
@@ -43,70 +41,65 @@ function displayArticle(article) {
 
 
 ////////////////////////////////////////////////////////////
-// Récupération de la quantité et de la couleur en cours 
-////////////////////////////////////////////////////////////
 
-const toCardBtn = document.getElementById("addToCart")
-
-
-function qtyValue() {
-    let qty = document.getElementById("quantity")
-    return qty.value
-}
-
+// Récupération de la couleur
 function colorValue() {
-    let color = document.getElementById("colors")
-    // console.log(color.value)
-    return color.value
+    let color = document.getElementById("colors").value
+    return color
 }
+
+// Récupération de la quantité 
+function qtyValue() {
+    let qty = document.getElementById("quantity").value
+    return qty
+}
+
+// envoie dans le localStorage
+function saveBasket(basket) {
+    localStorage.setItem("basket", JSON.stringify(basket))
+    alert("Ajout au panier")
+}
+
 
 ////////////////////////////////////////////////////////////
 // Envoi dans le localStorage   
 ////////////////////////////////////////////////////////////
 
-// au clic du bouton avec id=click
-toCardBtn.addEventListener("click", () => {
+// au clic du bouton "ajouter au panier"
+document.getElementById("addToCart").addEventListener("click", () => {
 
-    if((qtyValue() > 0 && qtyValue() <= 100) && (colorValue() != ""))
-    {
+    // si aucune couleur n'est sélectionnée
+    if(colorValue() == "") {
+        alert('Veuillez selectionner une couleur')
+        return false;
+    // si la quantité n'est pas correctement renseignée
+    }else if(qtyValue() <= 0 || qtyValue() > 100) {
+        alert('Veillez saisir une quantité comprise entre 1 et 100');
+        return false;
+    }else {
+        let basket = JSON.parse(localStorage.getItem("basket"))
         let newArticle = [getArticleId(), colorValue(), qtyValue()]
 
-        let basket = JSON.parse(localStorage.getItem("basket"))
-    
         let articleExistant = false
     
+        // si panier vide
         if(basket == null) {
             basket = []
             basket.push(newArticle)
-            localStorage.setItem("basket", JSON.stringify(basket))
         } else {
             for (let i = 0; i < basket.length; i++) {
+                // sinom : vérification si article similaire dans panier
                 if(basket[i][0] == getArticleId() && basket[i][1] == colorValue() ) {
-                    basket[i][2] =  +basket[i][2] + +qtyValue()
-                    localStorage.setItem("basket", JSON.stringify(basket))
+                    basket[i][2] = Number(qtyValue()) + Number(basket[i][2])
                     articleExistant = true
                     break
                 }            
             }   
+            // si le panier contient au moins 1 article différent
             if (articleExistant == false) {
                 basket.push(newArticle)
-                localStorage.setItem("basket", JSON.stringify(basket))
             }
+            saveBasket(basket)
         }
-
-    }else if(colorValue() == "") {
-        alert('Veuillez selectionner une couleur')
-        return false;
-    }else if(qtyValue() <= 0 || qtyValue() > 100) {
-        alert('Veillez saisir une quantité comprise entre 0 et 100');
-        return false;
     }
-    
 })
-
-// }else if(qtyValue() <= 0 || qtyValue() > 100){
-//     alert('Veillez saisir une quantité comprise entre 0 et 100');
-//     return false;
-// }else {
-//     alert('Veuillez selectionner une couleur')
-// }

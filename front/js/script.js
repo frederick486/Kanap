@@ -4,7 +4,7 @@ main()
 
 async function main() {
     const listeArticle = await getListeArticle()
-
+    
     for (article of listeArticle) {
         displayArticle(article)        
     }

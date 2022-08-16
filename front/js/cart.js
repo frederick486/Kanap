@@ -5,77 +5,79 @@ let totalPrice = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-for (let i = 0; i < basket.length; i++) {
+if(basket != null) {
+    for (let i = 0; i < basket.length; i++) {
      
-    let id = basket[i][0]
-    let color = basket[i][1]
-    let qty = basket[i][2]
-
-    // ???????? article est déclaré mais sa valeur n'est jamais lue, 
-    // pourtant quand on la supprime, l'affichage ne fonctionne plus ...
-    let article;
-
-
-    (async function() {
-        const article = await getArticle(id)
-        displayArticle(article)
-    })()
-
-    //Récupération des infots de l'article en cours de traitement depuis l'API
-    async function getArticle() {
-        try {
-            const httpBodyResponse = await fetch(`http://localhost:3000/api/products/${id}`)
-            const article = await httpBodyResponse.json()
-            return article
-        } catch (error) {
-            alert(error)
-        }
-    } //fin Récupération des infots de l'article depuis l'API
+        let id = basket[i][0]
+        let color = basket[i][1]
+        let qty = basket[i][2]
     
-
-    // affichage ---------------------------------------------------------------------
-    function displayArticle(article) {
-
-        document.getElementById("cart__items").innerHTML += `
-
-        <article class="cart__item" data-id="${id}" data-color="${color}">
-            <div class="cart__item__img">
-            <img src="${article.imageUrl}" alt="${article.altTxt}">
-            </div>
-            <div class="cart__item__content">
-            <div class="cart__item__content__description">
-                <h2>${article.name}</h2>
-                <p>${color}</p>
-                <p>${article.price * qty} €</p>
-            </div>
-            <div class="cart__item__content__settings">
-                <div class="cart__item__content__settings__quantity">
-                <p>Qté : </p>
-                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${qty}">
-                </div>
-                <div class="cart__item__content__settings__delete">
-                <p class="deleteItem">Supprimer</p>
-                </div>
-            </div>
-            </div>
-        </article> 
+        // ???????? article est déclaré mais sa valeur n'est jamais lue, 
+        // pourtant quand on la supprime, l'affichage ne fonctionne plus ...
+        let article;
+    
+    
+        (async function() {
+            const article = await getArticle(id)
+            displayArticle(article)
+        })()
+    
+        //Récupération des infots de l'article en cours de traitement depuis l'API
+        async function getArticle() {
+            try {
+                const httpBodyResponse = await fetch(`http://localhost:3000/api/products/${id}`)
+                const article = await httpBodyResponse.json()
+                return article
+            } catch (error) {
+                alert(error)
+            }
+        } //fin Récupération des infots de l'article depuis l'API
         
-        ` // <<< ATTENTION A L'APOSTROPHE 
-
-        if(i == basket.length - 1)
-        {
-            delletArticle();
-
-            modifQuantity();
-
-        }
-        // Affichage du prix total
-        totalPrice += article.price * basket[i][2];    
-        document.getElementById('totalPrice').innerHTML = totalPrice;
-
-    } // fin display()
-
-} // fin boucle for()
+    
+        // affichage ---------------------------------------------------------------------
+        function displayArticle(article) {
+    
+            document.getElementById("cart__items").innerHTML += `
+    
+            <article class="cart__item" data-id="${id}" data-color="${color}">
+                <div class="cart__item__img">
+                <img src="${article.imageUrl}" alt="${article.altTxt}">
+                </div>
+                <div class="cart__item__content">
+                <div class="cart__item__content__description">
+                    <h2>${article.name}</h2>
+                    <p>${color}</p>
+                    <p>${article.price * qty} €</p>
+                </div>
+                <div class="cart__item__content__settings">
+                    <div class="cart__item__content__settings__quantity">
+                    <p>Qté : </p>
+                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${qty}">
+                    </div>
+                    <div class="cart__item__content__settings__delete">
+                    <p class="deleteItem">Supprimer</p>
+                    </div>
+                </div>
+                </div>
+            </article> 
+            
+            ` // <<< ATTENTION A L'APOSTROPHE 
+    
+            if(i == basket.length - 1)
+            {
+                delletArticle();
+    
+                modifQuantity();
+    
+            }
+            // Affichage du prix total
+            totalPrice += article.price * basket[i][2];    
+            document.getElementById('totalPrice').innerHTML = totalPrice;
+    
+        } // fin display()
+    
+    } // fin boucle for()
+}
 
 
 totalQuantity()
@@ -83,8 +85,10 @@ totalQuantity()
 
 function totalQuantity() {
     let totalQty = 0;
-    for (let i = 0; i < basket.length; i++) {
-        totalQty += Number(basket[i][2])     
+    if(basket != null) {
+        for (let i = 0; i < basket.length; i++) {
+            totalQty += Number(basket[i][2])     
+        }
     }
 
     document.getElementById('totalQuantity').innerHTML = totalQty;
@@ -111,24 +115,22 @@ function modifQuantity() {
    
     for (let l = 0; l < modifQty.length; l++) {
 
-        modifQty[l].addEventListener("input", (event) => {
-        event.preventDefault();
-                
-        let qtyArt = event.target.value;
-    
-        if(qtyArt <= 0 || qtyArt > 100) {
-            alert('Veuillez saisir une valeur comprise entre 1 et 100')
-            return false                    
-        }else {
-            basket[l][2] = qtyArt;
-            localStorage.setItem("basket", JSON.stringify(basket));
-        }
-            
-        window.location.reload();
-
+        modifQty[l].addEventListener("change", (event) => {
+            event.preventDefault();
+                    
+            let qtyArt = event.target.value;
+        
+            if(qtyArt <= 0 || qtyArt > 100) {
+                alert('Veuillez saisir une valeur comprise entre 1 et 100')
+                window.location.reload();
+                return false                    
+            }else {
+                basket[l][2] = qtyArt;
+                localStorage.setItem("basket", JSON.stringify(basket));
+                window.location.reload();
+            }                
         })
-    } 
-    
+    }     
 }  
 
 // FORMULAIRE//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -219,24 +221,30 @@ document.getElementById("email").addEventListener("input", function() {
 })
 
 
-// création de l'array de string product
-const tabId = []
-for (let i = 0; i < basket.length; i++) {
-    tabId[i] = basket[i][0];    
-}
-
-
 // au click sur le bouton <input [...] id="order">
 document.getElementById("order").addEventListener("click", (e) => {
 
     e.preventDefault();
 
-    if(basket.length == 0){
-
+    // basket == null <=> cas ou l'utilisateur ouvre la page panier sans avoir ajouté d'article
+    // basket.length == 0 <=> cas ou l'utilisateur à supprimé tous les articles du panier
+    if((basket == null) || (basket.length == 0)){
         alert("Vous n'avez aucun article à passer en commande");
+        
     // Si tout ok => envoi vers l'API  ...
-    }else if (testFirstName && testLastName && testAdress && testCity && testEmail){
+    }else if (  testFirstName && 
+                testLastName && 
+                testAdress && 
+                testCity && 
+                testEmail ) {
 
+        // création de l'array de string product
+        const tabId = []
+        for (let i = 0; i < basket.length; i++) {
+            tabId[i] = basket[i][0];    
+        }    
+
+        // créaton de l'envoi
         let bodyEnvoie = {
             contact: {
                 firstName: document.getElementById("firstName").value,

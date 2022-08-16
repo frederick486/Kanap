@@ -86,11 +86,13 @@ document.getElementById("addToCart").addEventListener("click", () => {
         if(basket == null) {
             basket = []
             basket.push(newArticle)
+            saveBasket(basket)
         } else {
             for (let i = 0; i < basket.length; i++) {
                 // sinom : vérification si article similaire dans panier
                 if(basket[i][0] == getArticleId() && basket[i][1] == colorValue() ) {
                     basket[i][2] = Number(qtyValue()) + Number(basket[i][2])
+                    saveBasket(basket)
                     articleExistant = true
                     break
                 }            
@@ -98,8 +100,8 @@ document.getElementById("addToCart").addEventListener("click", () => {
             // si le panier contient au moins 1 article différent
             if (articleExistant == false) {
                 basket.push(newArticle)
+                saveBasket(basket)
             }
-            saveBasket(basket)
         }
     }
 })

@@ -23,64 +23,59 @@ if(basket != null) {
         let color = basket[i][1]
         let qty = basket[i][2]
     
-        // ???????? article est déclaré mais sa valeur n'est jamais lue, 
-        // pourtant quand on la supprime, l'affichage ne fonctionne plus ...
+        // la variable "article" est déclaré mais sa valeur n'est jamais lue, 
+        // pourtant quand on la supprime, l'affichage ne fonctionne plus.
         let article;
     
-    
+        // appel de getArticle, récupération de la promise de fetch et appel de displayArticle
         (async function() {
             const article = await getArticle(id)
-            console.log("article : ", article)
             displayArticle(article)
         })()
-    
-
-        
+            
     
         // affichage ---------------------------------------------------------------------
         function displayArticle(article) {
     
             document.getElementById("cart__items").innerHTML += `
     
-            <article class="cart__item" data-id="${id}" data-color="${color}">
-                <div class="cart__item__img">
-                <img src="${article.imageUrl}" alt="${article.altTxt}">
-                </div>
-                <div class="cart__item__content">
-                <div class="cart__item__content__description">
-                    <h2>${article.name}</h2>
-                    <p>${color}</p>
-                    <p>${article.price * qty} €</p>
-                </div>
-                <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                    <p>Qté : </p>
-                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${qty}">
+                <article class="cart__item" data-id="${id}" data-color="${color}">
+                    <div class="cart__item__img">
+                    <img src="${article.imageUrl}" alt="${article.altTxt}">
                     </div>
-                    <div class="cart__item__content__settings__delete">
-                    <p class="deleteItem">Supprimer</p>
+                    <div class="cart__item__content">
+                    <div class="cart__item__content__description">
+                        <h2>${article.name}</h2>
+                        <p>${color}</p>
+                        <p>${article.price * qty} €</p>
                     </div>
-                </div>
-                </div>
-            </article> 
-            
-            ` // <<< ATTENTION A L'APOSTROPHE 
-    
-            if(i == basket.length - 1)
-            {
+                    <div class="cart__item__content__settings">
+                        <div class="cart__item__content__settings__quantity">
+                        <p>Qté : </p>
+                        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${qty}">
+                        </div>
+                        <div class="cart__item__content__settings__delete">
+                        <p class="deleteItem">Supprimer</p>
+                        </div>
+                    </div>
+                    </div>
+                </article> 
+                
+                ` // <<< ATTENTION A L'APOSTROPHE 
+
+            // si l'itération est terminée
+            if(i == basket.length - 1) {
                 delletArticle();
-    
                 modifQuantity();
-    
             }
+
             // Affichage du prix total
             totalPrice += article.price * basket[i][2];    
             document.getElementById('totalPrice').innerHTML = totalPrice;
     
-        } // fin display()
-    
+        } // fin display()    
     } // fin boucle for()
-}
+} // fin du if(basket != null)
 
 
 totalQuantity()
@@ -100,7 +95,7 @@ function totalQuantity() {
 // suppression d'un article au click sur le bouton "supprimer
 function delletArticle() {
     let articleDelleted = document.querySelectorAll('.deleteItem') // <<< ATTENTION AU . DEVANT deleteItem
-
+    
     for (let l = 0; l < articleDelleted.length; l++) {
 
         articleDelleted[l].addEventListener("click", (event) => {
@@ -136,14 +131,17 @@ function modifQuantity() {
     }     
 }  
 
-// FORMULAIRE//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FORMULAIRE //////////////////////////////////////////////////////////////////////////////////
 
 const regexName = /^[A-Za-z\-\séèêëïü'çà]*$/;
 const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const regexAddresse = /^[a-zA-Z0-9\s\,\''\-]*$/;
 
+// Variables pour test regex
 let testFirstName = testLastName = testAdress = testCity = testEmail = false;
 
+
+// Saisie prénom
 document.getElementById("firstName").addEventListener("input", function() {
 
     let messageError = document.getElementById("firstNameErrorMsg");
@@ -160,6 +158,7 @@ document.getElementById("firstName").addEventListener("input", function() {
 })
 
 
+// Saisie nom
 document.getElementById("lastName").addEventListener("input", function() {
 
     let messageError = document.getElementById("lastNameErrorMsg");
@@ -176,6 +175,7 @@ document.getElementById("lastName").addEventListener("input", function() {
 })
 
 
+// Saisie adresse
 document.getElementById("address").addEventListener("input", function() {
 
     let messageError = document.getElementById("addressErrorMsg");
@@ -192,6 +192,7 @@ document.getElementById("address").addEventListener("input", function() {
 })
 
 
+// Saisie ville
 document.getElementById("city").addEventListener("input", function() {
 
     let messageError = document.getElementById("cityErrorMsg");
@@ -208,6 +209,7 @@ document.getElementById("city").addEventListener("input", function() {
 })
 
 
+// Saisie adresse mail
 document.getElementById("email").addEventListener("input", function() {
 
     let messageError = document.getElementById("emailErrorMsg");

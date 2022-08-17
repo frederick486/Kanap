@@ -1,29 +1,22 @@
-// la fonction main() s'exécute dès le chargement de la page
-main()
 
-
-async function main() {
-    const listeArticle = await getListeArticle()
-    
-    for (article of listeArticle) {
-        displayArticle(article)        
+// requête de l'API
+async function getListeArticle() {
+    try {
+        const httpBodyResponse = await fetch("http://localhost:3000/api/products")            
+        const listeArticle = await httpBodyResponse.json()             
+        return listeArticle
+    } catch (error) {
+        alert(error)
     }
 }
 
-
-function getListeArticle() {
-    return fetch("http://localhost:3000/api/products")      // <= fetch() vas chercher les infots à l'Url spécifiée
-        .then(function(httpBodyResponse) {                  // <= la fonction dans then prend en paramètre le body de la réponse http
-            return httpBodyResponse.json()                  // <= transforme le body en JSON
-        })        
-        .then(function(listeArticle) {                      // <= on récupère le JSON du dessus (articles)
-            return listeArticle                     
-        })
-        .catch(function(error) {                            // <= affichage si erreur
-            alert(error)
-        })
-}
-
+// récupération de la promise de fetch, parcours de celle-ci et appel de displayArticle pour chaque élément
+(async function () {
+    const listeArticle = await getListeArticle()    
+    for (article of listeArticle) {
+        displayArticle(article)        
+    }
+})()
 
 //affichage d'un article
 function displayArticle(article) {

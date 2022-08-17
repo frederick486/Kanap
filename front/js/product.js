@@ -1,5 +1,11 @@
+// récupération de l'id de l'article dans l'URL de la page
+function getArticleId() {
+    return new URL(location.href).searchParams.get("id")
+}
 
-// pour avoir l'id de la page courante
+
+// récupération de l'id de l'article dans variable articleId
+// récupération de la promise de fetch, appel displayArticle pour l'article en cour
 (async function() {
     const articleId = getArticleId()
     const article = await getArticle(articleId)
@@ -7,23 +13,15 @@
 })()
 
 
-function getArticleId() {
-    // location.href <=> URL de la page courrante
-    return new URL(location.href).searchParams.get("id")
-}
-
-
-function getArticle(articleId) {
-    return fetch(`http://localhost:3000/api/products/${articleId}`)      
-        .then(function(httpBodyResponse) {                  
-            return httpBodyResponse.json()                 
-        })        
-        .then(function(listeArticle) {                     
-            return listeArticle                     
-        })
-        .catch(function(error) {                            
-            alert(error)
-        })
+// requête de l'API sur l'article en cours
+async function getArticle(articleId) {
+    try {
+        const httpBodyResponse = await fetch(`http://localhost:3000/api/products/${articleId}`)
+        const listeArticle = await httpBodyResponse.json()
+        return listeArticle
+    } catch (error) {
+        alert(error)
+    }
 }
 
 

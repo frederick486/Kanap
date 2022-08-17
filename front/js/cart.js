@@ -3,6 +3,17 @@ let basket = JSON.parse(localStorage.getItem("basket"))
 
 let totalPrice = 0;
 
+//Récupération des infots de l'article en cours de traitement depuis l'API
+async function getArticle(a) {
+    try {
+        const httpBodyResponse = await fetch(`http://localhost:3000/api/products/${a}`)
+        const article = await httpBodyResponse.json()
+        return article
+    } catch (error) {
+        alert(error)
+    }
+} //fin Récupération des infots de l'article depuis l'API
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if(basket != null) {
@@ -19,19 +30,11 @@ if(basket != null) {
     
         (async function() {
             const article = await getArticle(id)
+            console.log("article : ", article)
             displayArticle(article)
         })()
     
-        //Récupération des infots de l'article en cours de traitement depuis l'API
-        async function getArticle() {
-            try {
-                const httpBodyResponse = await fetch(`http://localhost:3000/api/products/${id}`)
-                const article = await httpBodyResponse.json()
-                return article
-            } catch (error) {
-                alert(error)
-            }
-        } //fin Récupération des infots de l'article depuis l'API
+
         
     
         // affichage ---------------------------------------------------------------------
@@ -82,7 +85,7 @@ if(basket != null) {
 
 totalQuantity()
 
-
+// Calcul quantité totale des articles
 function totalQuantity() {
     let totalQty = 0;
     if(basket != null) {
@@ -94,7 +97,7 @@ function totalQuantity() {
     document.getElementById('totalQuantity').innerHTML = totalQty;
 }
 
-
+// suppression d'un article au click sur le bouton "supprimer
 function delletArticle() {
     let articleDelleted = document.querySelectorAll('.deleteItem') // <<< ATTENTION AU . DEVANT deleteItem
 
@@ -109,7 +112,7 @@ function delletArticle() {
     }   
 }
    
-
+// modification quantité d'article au changement de la valeur du champ
 function modifQuantity() {
     let modifQty = document.getElementsByName('itemQuantity')
    

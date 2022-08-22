@@ -10,6 +10,7 @@ async function getListeArticle() {
     }
 }
 
+
 // récupération de la promise de fetch, parcours de celle-ci et appel de displayArticle pour chaque élément
 (async function () {
     const listeArticle = await getListeArticle()    
@@ -17,6 +18,7 @@ async function getListeArticle() {
         displayArticle(article)        
     }
 })()
+
 
 //affichage d'un article
 function displayArticle(article) {

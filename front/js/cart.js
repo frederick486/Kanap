@@ -1,4 +1,4 @@
-
+// Récupération du contenu du localStorage
 let basket = JSON.parse(localStorage.getItem("basket"))
 
 let totalPrice = 0;
@@ -23,8 +23,7 @@ if(basket != null) {
         let color = basket[i][1]
         let qty = basket[i][2]
     
-        // la variable "article" est déclaré mais sa valeur n'est jamais lue, 
-        // pourtant quand on la supprime, l'affichage ne fonctionne plus.
+        // pour displayArticle()
         let article;
     
         // appel de getArticle, récupération de la promise de fetch et appel de displayArticle
@@ -133,11 +132,11 @@ function modifQuantity() {
 
 // FORMULAIRE //////////////////////////////////////////////////////////////////////////////////
 
-const regexName = /^[A-Za-z\-\séèêëïü'çà]*$/;
-const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-const regexAddresse = /^[a-zA-Z0-9\s\,\''\-]*$/;
+const regexName = /^[^-\s][A-Za-z\-\séèêëïü'çà]*$/;
+const regexEmail = /^[^-\s][\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const regexAddresse = /^[^-\s][a-zA-Z0-9\s\,\''\-]*$/;
 
-// Variables pour test regex
+// Variables pour tests regex
 let testFirstName = testLastName = testAdress = testCity = testEmail = false;
 
 
@@ -249,7 +248,7 @@ document.getElementById("order").addEventListener("click", (e) => {
             tabId[i] = basket[i][0];    
         }    
 
-        // créaton de l'envoi
+        // création de l'envoi
         let bodyEnvoie = {
             contact: {
                 firstName: document.getElementById("firstName").value,
@@ -261,6 +260,7 @@ document.getElementById("order").addEventListener("click", (e) => {
             products: tabId
         }
     
+        // requête API
         fetch('http://localhost:3000/api/products/order', {
             method: "POST",
             body: JSON.stringify(bodyEnvoie),
@@ -271,13 +271,10 @@ document.getElementById("order").addEventListener("click", (e) => {
         .then((res) => res.json())
         .then((data) => {
             const orderId = data.orderId
-               window.location.href = "../html/confirmation.html" + "?orderId=" + orderId
+            // console.log("data", data)
+            window.location.href = "../html/confirmation.html" + "?orderId=" + orderId
         })
         .catch((err) => console.log(err))
-
-        // suppression du panier après passage commande
-        localStorage.clear();
-        // localStorage.removeItem("basket");
 
     }else {
         alert("Merci de compléter le formulaire");          

@@ -19,6 +19,7 @@ async function getArticle(a) {
 if(basket != null) {
     for (let i = 0; i < basket.length; i++) {
      
+        // récupération de l'id, couleur et quantité de l'article à l'indice [i]
         let id = basket[i][0]
         let color = basket[i][1]
         let qty = basket[i][2]
@@ -132,6 +133,7 @@ function modifQuantity() {
 
 // FORMULAIRE //////////////////////////////////////////////////////////////////////////////////
 
+// création des Regex
 const regexName = /^[^-\s][A-Za-z\-\séèêëïü'çà]*$/;
 const regexEmail = /^[^-\s][\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const regexAddresse = /^[^-\s][a-zA-Z0-9\s\,\''\-]*$/;

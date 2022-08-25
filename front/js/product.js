@@ -90,9 +90,16 @@ document.getElementById("addToCart").addEventListener("click", () => {
                 // sinom : vérification si article similaire dans panier
                 if(basket[i][0] == getArticleId() && basket[i][1] == colorValue() ) {
                     basket[i][2] = Number(qtyValue()) + Number(basket[i][2])
-                    saveBasket(basket)
-                    articleExistant = true
-                    break
+
+                    // controle de la quantité de l'article déja saisie
+                    if(basket[i][2] > 100) {
+                        alert("vous ne pouvez plus ajouter cet article au panier car la quantité max est atteinte")
+                        return false
+                    }else {
+                        saveBasket(basket)
+                        articleExistant = true
+                        break
+                    }
                 }            
             }   
             // si le panier contient au moins 1 article différent

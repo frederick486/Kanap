@@ -119,7 +119,7 @@ function modifQuantity() {
             let qtyArt = event.target.value;
         
             if(qtyArt <= 0 || qtyArt > 100) {
-                alert('Veuillez saisir une valeur comprise entre 1 et 100')
+                alert('Veuillez saisir une quantité comprise entre 1 et 100')
                 window.location.reload();
                 return false                    
             }else {
@@ -127,6 +127,7 @@ function modifQuantity() {
                 localStorage.setItem("basket", JSON.stringify(basket));
                 window.location.reload();
             }                
+
         })
     }     
 }  

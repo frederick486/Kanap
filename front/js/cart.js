@@ -23,17 +23,7 @@ if(basket != null) {
         let id = basket[i][0]
         let color = basket[i][1]
         let qty = basket[i][2]
-    
-        // pour displayArticle()
-        let article;
-    
-        // appel de getArticle, récupération de la promise de fetch et appel de displayArticle
-        (async function() {
-            const article = await getArticle(id)
-            displayArticle(article)
-        })()
-            
-    
+                   
         // affichage ---------------------------------------------------------------------
         function displayArticle(article) {
     
@@ -74,11 +64,15 @@ if(basket != null) {
             document.getElementById('totalPrice').innerHTML = totalPrice;
     
         } // fin display()    
+
+        (async function() {
+            const article = await getArticle(id)
+            displayArticle(article)
+        })()
+
     } // fin boucle for()
 } // fin du if(basket != null)
 
-
-totalQuantity()
 
 // Calcul quantité totale des articles
 function totalQuantity() {
@@ -91,6 +85,9 @@ function totalQuantity() {
 
     document.getElementById('totalQuantity').innerHTML = totalQty;
 }
+
+totalQuantity()
+
 
 // suppression d'un article au click sur le bouton "supprimer
 function delletArticle() {
